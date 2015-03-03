@@ -306,7 +306,7 @@ static inline NSData* toJSONData( UU id object ) {
                     // Delete all obsolete map results (ones from since-replaced revisions):
                     ok = [_fmdb executeUpdate: @"DELETE FROM maps WHERE view_id=? AND sequence IN ("
                                                     "SELECT parent FROM revs WHERE sequence>? "
-                                                        "AND parent>0 AND parent<=?)",
+                                                        "AND +parent>0 AND +parent<=?)",
                                               @(viewID), @(last), @(last)];
                 }
                 if (!ok)

@@ -460,6 +460,14 @@ NSArray* CBL_RunloopModes;
         dbVersion = 16;
     }
 
+    if (dbVersion < 17) {
+        NSString* sql = @"CREATE INDEX maps_view_sequence ON maps(view_id, sequence);\
+                          PRAGMA user_version = 17";
+        if (![self initialize: sql error: outError])
+            return NO;
+        dbVersion = 17;
+    }
+
     if (isNew && ![self initialize: @"END TRANSACTION" error: outError])
         return NO;
 
