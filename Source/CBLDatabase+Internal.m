@@ -596,7 +596,7 @@ NSArray* CBL_RunloopModes;
 }
 
 - (CBLStatus) setInfo: (id)info forKey: (NSString*)key {
-    if ([_fmdb executeUpdate: @"UPDATE info SET value=? WHERE key=?", info, key])
+    if ([_fmdb executeUpdate: @"INSERT OR REPLACE INTO info (key, value) VALUES (?, ?)", key, info])
         return kCBLStatusOK;
     else
         return self.lastDbError;
