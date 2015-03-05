@@ -551,8 +551,9 @@ NSArray* CBL_RunloopModes;
         SequenceNumber lastOptimized = [[self infoForKey: @"last_optimized"] longLongValue];
         if (lastOptimized <= curSequence/10) {
             Log(@"%@: Optimizing SQL indexes (curSeq=%lld, last run at %lld)", self, curSequence, lastOptimized);
-            [_fmdb executeQuery: @"ANALYZE"];
-            [_fmdb executeQuery: @"ANALYZE sqlite_master"];
+            [_fmdb executeUpdate: @"ANALYZE"];
+            [_fmdb executeUpdate: @"ANALYZE sqlite_master"];
+            [_fmdb clearCachedStatements];
             [self setInfo: @(curSequence) forKey: @"last_optimized"];
         }
     }
