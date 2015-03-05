@@ -303,6 +303,7 @@ static inline NSData* toJSONData( UU id object ) {
                     // If the lastSequence has been reset to 0, make sure to remove all map results:
                     ok = [_fmdb executeUpdate: @"DELETE FROM maps WHERE view_id=?", @(viewID)];
                 } else {
+                    [self optimizeSQLIndexes]; // ensures the below query will use the right indexes
                     // Delete all obsolete map results (ones from since-replaced revisions):
                     ok = [_fmdb executeUpdate: @"DELETE FROM maps WHERE view_id=? AND sequence IN ("
                                                     "SELECT parent FROM revs WHERE sequence>? "

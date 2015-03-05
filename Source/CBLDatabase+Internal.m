@@ -475,6 +475,9 @@ NSArray* CBL_RunloopModes;
     _fmdb.crashOnErrors = YES;
 #endif
 
+    if (!isNew)
+        [self optimizeSQLIndexes]; // runs ANALYZE query
+
     // Open attachment store:
     NSString* attachmentsPath = self.attachmentStorePath;
     _attachments = [[CBL_BlobStore alloc] initWithPath: attachmentsPath error: outError];
@@ -539,6 +542,20 @@ NSArray* CBL_RunloopModes;
         _modelFactory = nil;
     }
     [_manager _forgetDatabase: self];
+}
+
+
+- (void) optimizeSQLIndexes {
+    SequenceNumber curSequence = self.lastSequenceNumber;
+    if (curSequence > 0) {
+        SequenceNumber lastOptimized = [[self infoForKey: @"last_optimized"] longLongValue];
+        if (lastOptimized <= curSequence/10) {
+            Log(@"%@: Optimizing SQL indexes (curSeq=%lld, last run at %lld)", self, curSequence, lastOptimized);
+            [_fmdb executeQuery: @"ANALYZE"];
+            [_fmdb executeQuery: @"ANALYZE sqlite_master"];
+            [self setInfo: @(curSequence) forKey: @"last_optimized"];
+        }
+    }
 }
 
 

@@ -136,6 +136,8 @@ extern const CBLChangesOptions kDefaultCBLChangesOptions;
 @property (nonatomic, readonly) NSString* privateUUID;
 @property (nonatomic, readonly) NSString* publicUUID;
 
+- (void) optimizeSQLIndexes;
+
 /** Executes the block within a database transaction.
     If the block returns a non-OK status, the transaction is aborted/rolled back.
     If the block returns kCBLStatusDBBusy, the block will also be retried after a short delay;
