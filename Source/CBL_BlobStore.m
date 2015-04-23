@@ -261,6 +261,10 @@
 #ifdef GNUSTEP
         _tempDir = [NSTemporaryDirectory() copy];
 #else
+#if TARGET_OS_MAC
+        _tempDir = [NSTemporaryDirectory() copy];
+        Log(@"CBL_BlobStore tempDir %@", _tempDir);
+#else
         NSError* error;
         NSURL* parentURL = [NSURL fileURLWithPath: _path isDirectory: YES];
         NSURL* tempDirURL = [[NSFileManager defaultManager] 
@@ -272,6 +276,7 @@
         Log(@"CBL_BlobStore %@ created tempDir %@", _path, _tempDir);
         if (!_tempDir)
             Warn(@"CBL_BlobStore: Unable to create temp dir: %@", error);
+#endif
 #endif
     }
     return _tempDir;
