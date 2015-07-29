@@ -9,7 +9,7 @@
 #import "CBL_Storage.h"
 #import "CBLDatabase.h"
 @class CBLQueryOptions, CBLView, CBLQueryRow, CBL_BlobStore, CBLDocument, CBLCache, CBLDatabase,
-       CBLDatabaseChange, CBL_Shared, CBLModelFactory;
+       CBLDatabaseChange, CBL_Shared, CBLModelFactory, CBLNuModelFactory;
 
 
 // Default value for maxRevTreeDepth, the max rev depth to preserve in a prune operation
@@ -53,6 +53,7 @@ extern NSArray* CBL_RunloopModes;
     bool _postingChangeNotifications;
     NSDate* _startTime;
     CBLModelFactory* _modelFactory;
+    CBLNuModelFactory* _nuFactory;
     NSMutableSet* _unsavedModelsMutable;   // All CBLModels that have unsaved changes
 #if DEBUG
     CBL_Shared* _debug_shared;
@@ -155,4 +156,8 @@ extern NSArray* CBL_RunloopModes;
  (issue #364). */
 - (void) postNotification: (NSNotification*)notification;
 
+@end
+
+@interface CBLDatabase (HookForCBLNuModelFactory)
+- (void) _revisionAdded: (CBLDatabaseChange*)change notify:(BOOL)notify;
 @end
